@@ -10,6 +10,8 @@ SLOT="0"
 KEYWORDS="~amd64"
 IUSE=""
 
+inherit user
+
 DEPEND_ALL_REQ="
 	>=sys-devel/make-3.81
 	>=app-shells/bash-3.2
@@ -52,3 +54,26 @@ DEPEND_FIREVISION="
 	>=media-libs/opencv-1.0.0
 	"
 RDEPEND=$DEPEND_ALL_REQ$DEPEND_FAWKES$DEPEND_BEHAVIOR$DEPEND_SKILLER$DEPEND_RRD$DEPEND_FIREVISION
+
+userhome=$(egethome 1000)
+
+# add fawkes group for path
+pkg_setup() {
+	enewgroup fawkes
+}
+
+# message to inform user about fawkes grou
+pkg_postinst() {
+	elog "add yourself to the fawkes group to have the ${userhome}/fawkes-robotino/bin in your path"
+}
+
+# install the path file
+src_install(){
+	echo "PATH=\"${userhome}/fawkes-robotino/bin\"" > ${T}/80${PN} || die "can't echo path"
+	doenvd ${T}/80${PN}
+}
+
+src_unpack() {
+	mkdir -p ${WORKDIR}/${P} || die "coud not create ${WORKDIR}/${P}"
+	#touch ${T}/80{$PN}
+}
