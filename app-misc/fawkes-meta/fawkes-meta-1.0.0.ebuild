@@ -22,6 +22,7 @@ DEPEND_ALL_REQ="
 	>=dev-cpp/yaml-cpp-0.2.5
 	>=sci-physics/bullet-2.79
 	<sci-physics/bullet-2.81
+	sys-libs/libtermcap-compat
 	"
 
 DEPEND_FAWKES="
@@ -71,6 +72,7 @@ pkg_postinst() {
 src_install(){
 	echo "PATH=\"${userhome}/fawkes-robotino/bin\"" > ${T}/80${PN} || die "can't echo path"
 	doenvd ${T}/80${PN}
+	dosym ../usr/lib/libtermcap.so.2 ${ROOT}/lib/libtermcap.so
 }
 
 src_unpack() {
