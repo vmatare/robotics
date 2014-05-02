@@ -7,6 +7,6 @@
 			<email>gaireg@gaireg.de</email>
 			<name>Randolph Maaßen</name>
 		</owner>
-		<source type="git">/home/gaireg/git/robotics-overlay</source>
+		<source type="git">https://github.com/GAireg/robotics.git</source>
 	</repo>
 </repositories>
