@@ -1,0 +1,1 @@
+add the repo.xml ('https://raw.githubusercontent.com/GAireg/robotics/master/repo.xml') to your overlays variable in /etc/layman/layman.cfg, sync your overlays and add the robotics overlay to enable this overlay.
