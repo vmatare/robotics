@@ -1,0 +1,14 @@
+--- a/src/CMakeLists.txt	2014-05-08 13:30:33.951229932 +0200
++++ b/src/CMakeLists.txt	2014-05-08 16:35:40.486772483 +0200
+@@ -123,9 +123,10 @@
+ if(ALVAR_PACKAGE MATCHES sdk)
+     install(FILES ${ALVAR_HEADERS} ${ALVAR_GLOBAL_HEADER} DESTINATION include)
+ endif(ALVAR_PACKAGE MATCHES sdk)
++install(FILES ${ALVAR_HEADERS} ${ALVAR_GLOBAL_HEADER} DESTINATION include/alvar)
+ 
+ # install target
+-install(TARGETS ALVAR DESTINATION bin)
++install(TARGETS ALVAR DESTINATION lib64)
+ 
+ # set include directories and libraries variables for alvar
+ list(APPEND ALVAR_INCLUDE_DIRS

@@ -1,0 +1,11 @@
+diff -ur a/src/platform/CaptureFactory_unix.cpp b/platform/CaptureFactory_unix.cpp
+--- "a/src/platform/CaptureFactory_unix.cpp"
++++ "b/src/platform/CaptureFactory_unix.cpp"
+@@ -24,6 +24,7 @@
+ #include "CaptureFactory_private.h"
+ 
+ #include <stdlib.h>
++#include <unistd.h>
+ 
+ namespace alvar {
+
