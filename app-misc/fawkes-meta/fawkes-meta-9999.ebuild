@@ -28,7 +28,6 @@ DEPEND_ALL_REQ="
 DEPEND_FAWKES="
 	>=dev-cpp/libxmlpp-2.20.0
 	>=net-libs/libmicrohttpd-0.9.6[messages]
-	<net-libs/libmicrohttpd-0.9.33
 	>=dev-libs/libdaemon-0.14
 	>=app-text/asciidoc-8.4
 	>=app-doc/doxygen-1.7.2
