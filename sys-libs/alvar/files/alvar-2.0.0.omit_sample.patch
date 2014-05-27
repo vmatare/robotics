@@ -1,0 +1,22 @@
+/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt    2012-05-29 17:11:26.000000000 +0200
++++ b/CMakeLists.txt    2014-05-27 15:51:31.524572502 +0200
+@@ -258,14 +265,14 @@
+ 
+ # process sub directories
+ if(ALVAR_PACKAGE)
+-    add_subdirectory(3rdparty)
++    #add_subdirectory(3rdparty)
+     add_subdirectory(src)
+     add_subdirectory(doc)
+     add_subdirectory(test)
+ endif(ALVAR_PACKAGE)
+-add_subdirectory(sample)
++#add_subdirectory(sample)
+ if(OPENSCENEGRAPH_FOUND)
+-    add_subdirectory(demo)
++    #add_subdirectory(demo)
+ endif(OPENSCENEGRAPH_FOUND)
+ add_subdirectory(build)
+ add_subdirectory(data)
+

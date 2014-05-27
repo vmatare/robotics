@@ -1,0 +1,142 @@
+diff -urN a/build/cmake/FindTinyXML.cmake b/build/cmake/FindTinyXML.cmake
+--- a/build/cmake/FindTinyXML.cmake	1970-01-01 01:00:00.000000000 +0100
++++ b/build/cmake/FindTinyXML.cmake	2014-05-27 13:38:10.110358231 +0200
+@@ -0,0 +1,72 @@
++# - Find TinyXML
++# Find the native TinyXML includes and library
++#
++#   TINYXML_FOUND        - True if TinyXML found.
++#   TINYXML_INCLUDE_DIRS - where to find tinyxml.h, etc.
++#   TINYXML_LIBRARIES    - List of libraries when using TinyXML.
++#
++#   TINYXML_VERSION       - Full version of TinyXML.
++#   TINYXML_VERSION_MAJOR - Major version of TinyXML.
++#   TINYXML_VERSION_MINOR - Minor version of TinyXML.
++#   TINYXML_VERSION_PATCH - Patch version of TinyXML.
++#
++
++LIST( APPEND TINYXML_NAMES "tinyxml" )
++
++FIND_PATH(
++  TINYXML_INCLUDE_DIR
++  "tinyxml.h"
++  )
++FIND_LIBRARY(
++  TINYXML_LIBRARY
++  NAMES ${TINYXML_NAMES}
++  )
++MARK_AS_ADVANCED(
++  TINYXML_INCLUDE_DIR
++  TINYXML_LIBRARY
++  )
++
++IF( TINYXML_INCLUDE_DIR AND EXISTS "${TINYXML_INCLUDE_DIR}/tinyxml.h" )
++  FILE(
++    STRINGS "${TINYXML_INCLUDE_DIR}/tinyxml.h"
++    TINYXML_VERSION_MAJOR
++    REGEX "^const int TIXML_MAJOR_VERSION = [0-9]+;$"
++    )
++  FILE(
++    STRINGS "${TINYXML_INCLUDE_DIR}/tinyxml.h"
++    TINYXML_VERSION_MINOR
++    REGEX "^const int TIXML_MINOR_VERSION = [0-9]+;$"
++    )
++  FILE(
++    STRINGS "${TINYXML_INCLUDE_DIR}/tinyxml.h"
++    TINYXML_VERSION_PATCH
++    REGEX "^const int TIXML_PATCH_VERSION = [0-9]+;$"
++    )
++
++  STRING(
++    REGEX REPLACE "^.*TIXML_MAJOR_VERSION = ([0-9]+).*$" "\\1"
++    TINYXML_VERSION_MAJOR "${TINYXML_VERSION_MAJOR}"
++    )
++  STRING(
++    REGEX REPLACE "^.*TIXML_MINOR_VERSION = ([0-9]+).*$" "\\1"
++    TINYXML_VERSION_MINOR "${TINYXML_VERSION_MINOR}"
++    )
++  STRING(
++    REGEX REPLACE "^.*TIXML_PATCH_VERSION = ([0-9]+).*$" "\\1"
++    TINYXML_VERSION_PATCH "${TINYXML_VERSION_PATCH}"
++    )
++
++  SET( TINYXML_VERSION "${TINYXML_VERSION_MAJOR}.${TINYXML_VERSION_MINOR}.${TINYXML_VERSION_PATCH}" )
++ENDIF()
++
++SET( TINYXML_INCLUDE_DIRS "${TINYXML_INCLUDE_DIR}" )
++SET( TINYXML_LIBRARIES "${TINYXML_LIBRARY}" )
++
++# handle the QUIETLY and REQUIRED arguments and set TINYXML_FOUND to TRUE if
++# all listed variables are TRUE
++INCLUDE( "FindPackageHandleStandardArgs" )
++FIND_PACKAGE_HANDLE_STANDARD_ARGS(
++  "TinyXML"
++  REQUIRED_VARS TINYXML_LIBRARIES TINYXML_INCLUDE_DIRS
++  VERSION_VAR TINYXML_VERSION
++  )
+diff -urN a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	2012-05-29 17:11:26.000000000 +0200
++++ b/CMakeLists.txt	2014-05-27 13:38:10.109358231 +0200
+@@ -107,6 +107,13 @@
+     endif(NOT ALVAR_NOGLUT)
+ endif(OPENGL_FOUND)
+ 
++find_package(TinyXML)
++if(TINYXML_FOUND)
++        message(STATUS "Found TinyXML")
++else(TINYXML_FOUND)
++        message(FATAL_ERROR, "Could NOT find TinyXML")
++endif(TINYXML_FOUND)
++
+ set(GLUT_ROOT_PATH $ENV{GLUT_ROOT} CACHE PATH "The GLUT root directory")
+ if(WIN32)
+     # Overriding versions in FindGLUT
+diff -urN a/src/CMakeLists.txt b/src/CMakeLists.txt
+--- a/src/CMakeLists.txt    2012-05-29 17:11:26.000000000 +0200
++++ b/src/CMakeLists.txt    2014-05-27 15:38:57.358552306 +0200
+@@ -2,7 +2,7 @@
+ include_directories(${OpenCV_INCLUDE_DIRS})
+ 
+ # include tinyxml library
+-include_directories(${TinyXML_INCLUDE_DIRS})
++include_directories(${TINYXML_INCLUDE_DIRS})
+ add_definitions(-DTIXML_USE_STL)
+ 
+ # ensure alvar api is exported when building library
+@@ -116,7 +116,7 @@
+ # link alvar library target to required libraries
+ target_link_libraries(ALVAR
+     ${OpenCV_LIBRARIES}
+-    TinyXML
++    ${TINYXML_LIBRARIES}
+ )
+ 
+ # install headers
+diff -urN a/test/CMakeLists.txt b/test/CMakeLists.txt
+--- a/test/CMakeLists.txt   2012-05-29 17:11:26.000000000 +0200
++++ b/test/CMakeLists.txt   2014-05-27 15:43:48.283560097 +0200
+@@ -8,7 +8,7 @@
+ endif(GLUT_FOUND)
+ 
+ # include tinyxml library
+-include_directories(${TinyXML_INCLUDE_DIRS})
++include_directories(${TINYXML_INCLUDE_DIRS})
+ add_definitions(-DTIXML_USE_STL)
+
+ # include alvar library
+@@ -21,7 +21,7 @@
+ if(CxxTest_FOUND AND PERL_FOUND)
+     # basic tests
+     add_cxxtest(TestFileFormats TestFileFormats.cpp)
+-    target_link_libraries(TestFileFormats ${ALVAR_LIBRARIES} TinyXML)
++    target_link_libraries(TestFileFormats ${ALVAR_LIBRARIES} ${TINYXML_LIBRARIES})
+
+     # TODO: port TestMarkerDetector to linux
+     if(WIN32)
+@@ -50,4 +50,4 @@
+
+ # add benchmark executables
+ add_executable(BenchmarkOverall BenchmarkOverall.cpp)
+-target_link_libraries(BenchmarkOverall ${ALVAR_LIBRARIES})
++target_link_libraries(BenchmarkOverall ${ALVAR_LIBRARIES} ${TINYXML_LIBRARIES})
+
