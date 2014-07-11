@@ -22,7 +22,7 @@ DEPEND="dev-libs/protobuf
 		dev-util/cmake
 		dev-vcs/mercurial
 		dev-qt/qtcore:4
-		net-misc/curl[openssl]
+		net-misc/curl[curl_ssl_openssl]
 		cegui? ( dev-games/cegui )
 		audio? ( media-libs/openal )
 		dev-cpp/tbb
