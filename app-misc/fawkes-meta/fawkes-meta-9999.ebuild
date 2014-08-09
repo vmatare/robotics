@@ -44,7 +44,7 @@ DEPEND_SKILLER="
 	>=media-gfx/graphviz-2.22
 	"
 DEPEND_RRD="
-	>=net-analyzer/rrdtool-1.4
+	>=net-analyzer/rrdtool-1.4[graph]
 	"
 DEPEND_FIREVISION="
 	>=media-libs/libdc1394-2.1.0
