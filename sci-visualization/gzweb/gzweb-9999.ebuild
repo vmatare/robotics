@@ -13,7 +13,7 @@ SRC_URI=""
 LICENSE=""
 SLOT="0"
 KEYWORDS=""
-IUSE=""
+IUSE="fawkes-models"
 
 DEPEND="dev-vcs/mercurial
 		dev-libs/jansson
@@ -23,7 +23,7 @@ DEPEND="dev-vcs/mercurial
 		dev-libs/tinyxml
 		sci-visualization/gazebo
 		dev-libs/libpthread-stubs
-		dev-python/virtualenv"
+		fawkes-models? ( dev-vcs/git )"
 RDEPEND="${DEPEND}"
 
 EHG_REPO_URI=https://bitbucket.org/osrf/gzweb
@@ -33,6 +33,10 @@ CMAKE_IN_SOURCE_BUILD=true
 MODEL_DIR=models
 MODEL_SRC_DIR=${EHG_STORE_DIR}/${EHG_PROJECT}/${MODEL_DIR}
 MODEL_SRC_URI=https://bitbucket.org/osrf/gazebo_models
+
+FAWKES_MODEL_DIR=fawkes-models
+FAWKES_MODEL_SRC_URI=http://git.fawkesrobotics.org/gazebo-models.git
+FAWKES_MODEL_SRC_DIR=${EHG_STORE_DIR}/${EHG_PROJECT}/${FAWKES_MODEL_DIR}
 
 src_unpack() {
 	#fetch sources
@@ -55,6 +59,18 @@ src_unpack() {
 	einfo "Model directory: ${WORKDIR}/${MODEL_DIR}"
 	hg clone ${EHG_QUIET_CMD_OPT} "${MODEL_SRC_DIR}" "${WORKDIR}/${MODEL_DIR}" || die clone failed
 
+	#fetch fawkes models
+	if use fawkes-models ; then
+		if [[ ! -d ${FAWKES_MODEL_SRC_DIR} ]]; then
+			einfo "fetching fawkes models via git from ${FAWKES_MODEL_SRC_URI} into ${FAWKES_MODEL_SRC_DIR}"
+			git clone "${FAWKES_MODEL_SRC_URI}" "${FAWKES_MODEL_SRC_DIR}" || die
+		else
+			einfo "updating git in ${FAWKES_MODEL_SRC_DIR}"
+			cd "${FAWKES_MODEL_SRC_DIR}" || die
+			git pull || die
+		fi
+		git clone "${FAWKES_MODEL_SRC_DIR}" "${WORKDIR}/${FAWKES_MODEL_DIR}" || die
+	fi
 }
 
 src_prepare() {
@@ -89,6 +105,10 @@ src_compile() {
 	cd ${S} || die
 	rm -rf ${S}/http/client/assets || die
 	mv ${S}/http/client/models ${S}/http/client/assets || die
+	if use fawkes-models ; then
+		einfo merging fawkes models
+		cp -r ${WORKDIR}/${FAWKES_MODEL_DIR}/* "${S}/http/client/assets/" || die
+	fi
 
 	${S}/get_local_models.py ${S}/http/client/assets || die
 	${S}/webify_models_v2.py ${S}/http/client/assets || die
