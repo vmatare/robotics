@@ -26,7 +26,7 @@ DEPEND="dev-libs/protobuf
 		cegui? ( dev-games/cegui )
 		audio? ( media-libs/openal )
 		dev-cpp/tbb
-		dev-games/ogre
+		<dev-games/ogre-1.9
 		gts? ( sci-libs/gts )
 		dev-libs/libxml2
 		media-libs/freeimage
