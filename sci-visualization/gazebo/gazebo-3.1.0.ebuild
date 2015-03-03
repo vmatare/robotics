@@ -23,7 +23,7 @@ DEPEND="dev-libs/protobuf
 		dev-vcs/mercurial
 		dev-qt/qtcore:4
 		net-misc/curl[curl_ssl_openssl]
-		cegui? ( dev-games/cegui )
+		cegui? ( <dev-games/cegui-0.8 )
 		audio? ( media-libs/openal )
 		dev-cpp/tbb
 		<dev-games/ogre-1.9
