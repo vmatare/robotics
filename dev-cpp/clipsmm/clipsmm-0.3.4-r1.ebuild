@@ -23,7 +23,7 @@ app-doc/doxygen
 dev-libs/libxslt
 sys-devel/m4
 sys-devel/libtool
-sys-libs/libtermcap-compat"
+>=sys-libs/libtermcap-compat-2.0.8-r5"
 
 RDEPEND="${DEPEND}"
 
