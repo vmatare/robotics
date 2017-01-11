@@ -4,9 +4,8 @@
 		<name>robotics</name>
 		<description>Overlay to maintain the dependecies for fawkes</description>
 		<owner>
-			<email>gaireg@gaireg.de</email>
-			<name>Randolph Maaßen</name>
+			<name>Victor Mataré</name>
 		</owner>
-		<source type="git">https://github.com/GAireg/robotics.git</source>
+		<source type="git">https://github.com/vmatare/robotics.git</source>
 	</repo>
 </repositories>
