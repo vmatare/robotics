@@ -1,0 +1,518 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 115880f..fa69ab7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -55,16 +55,16 @@ IF(APPLE)
+   SET(CMAKE_INSTALL_RPATH "")
+ ENDIF(APPLE)
+ 
++include(GNUInstallDirs)
++
+ # Set the output directory for the build executables and libraries
+-SET(g2o_RUNTIME_OUTPUT_DIRECTORY ${g2o_SOURCE_DIR}/bin CACHE PATH "Target for the binaries")
+ IF(WIN32)
++  SET(g2o_RUNTIME_OUTPUT_DIRECTORY ${g2o_SOURCE_DIR}/bin CACHE PATH "Target for the binaries")
+   SET(g2o_LIBRARY_OUTPUT_DIRECTORY ${g2o_SOURCE_DIR}/bin CACHE PATH "Target for the libraries")
+-ELSE(WIN32)
+-  SET(g2o_LIBRARY_OUTPUT_DIRECTORY ${g2o_SOURCE_DIR}/lib CACHE PATH "Target for the libraries")
++  SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${g2o_LIBRARY_OUTPUT_DIRECTORY})
++  SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${g2o_LIBRARY_OUTPUT_DIRECTORY})
++  SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${g2o_RUNTIME_OUTPUT_DIRECTORY})
+ ENDIF(WIN32)
+-SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${g2o_LIBRARY_OUTPUT_DIRECTORY})
+-SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${g2o_LIBRARY_OUTPUT_DIRECTORY})
+-SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${g2o_RUNTIME_OUTPUT_DIRECTORY})
+ 
+ # Set search directory for looking for our custom CMake scripts to
+ # look for SuiteSparse, QGLViewer, and Eigen3.
+diff --git a/EXTERNAL/csparse/CMakeLists.txt b/EXTERNAL/csparse/CMakeLists.txt
+index b88ae98..b9733c0 100644
+--- a/EXTERNAL/csparse/CMakeLists.txt
++++ b/EXTERNAL/csparse/CMakeLists.txt
+@@ -65,9 +65,9 @@ IF (UNIX)
+ ENDIF()
+ 
+ INSTALL(TARGETS csparse
+-  RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++  RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}
++  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}
+ )
+ 
+ FILE(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp")
+diff --git a/EXTERNAL/freeglut/CMakeLists.txt b/EXTERNAL/freeglut/CMakeLists.txt
+index 6ad2c79..3a76d62 100644
+--- a/EXTERNAL/freeglut/CMakeLists.txt
++++ b/EXTERNAL/freeglut/CMakeLists.txt
+@@ -9,9 +9,9 @@ TARGET_LINK_LIBRARIES(freeglut_minimal ${OPENGL_gl_LIBRARY})
+ SET_TARGET_PROPERTIES(freeglut_minimal PROPERTIES OUTPUT_NAME ${LIB_PREFIX}ext_freeglut_minimal)
+ 
+ INSTALL(TARGETS freeglut_minimal
+-  RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++  RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}
++  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}
+ )
+ 
+ FILE(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp")
+diff --git a/g2o/apps/g2o_cli/CMakeLists.txt b/g2o/apps/g2o_cli/CMakeLists.txt
+index 018731d..78e9e3a 100644
+--- a/g2o/apps/g2o_cli/CMakeLists.txt
++++ b/g2o/apps/g2o_cli/CMakeLists.txt
+@@ -31,8 +31,8 @@ SET_TARGET_PROPERTIES(g2o_cli_application PROPERTIES OUTPUT_NAME g2o${EXE_POSTFI
+ 
+ INSTALL(TARGETS g2o_cli_library g2o_cli_application
+   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
+ )
+ 
+ FILE(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp")
+diff --git a/g2o/apps/g2o_hierarchical/CMakeLists.txt b/g2o/apps/g2o_hierarchical/CMakeLists.txt
+index a465542..ee80c0d 100644
+--- a/g2o/apps/g2o_hierarchical/CMakeLists.txt
++++ b/g2o/apps/g2o_hierarchical/CMakeLists.txt
+@@ -29,8 +29,8 @@ SET_TARGET_PROPERTIES(g2o_hierarchical_application PROPERTIES OUTPUT_NAME g2o_hi
+ 
+ # INSTALL(TARGETS g2o_hierarchical_library g2o_cli_application
+ #   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-#   LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-#   ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++#   LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
++#   ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
+ # )
+ 
+ FILE(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp")
+diff --git a/g2o/apps/g2o_simulator/CMakeLists.txt b/g2o/apps/g2o_simulator/CMakeLists.txt
+index 8c90a1b..19ad573 100644
+--- a/g2o/apps/g2o_simulator/CMakeLists.txt
++++ b/g2o/apps/g2o_simulator/CMakeLists.txt
+@@ -55,8 +55,8 @@ SET_TARGET_PROPERTIES(g2o_anonymize_observations_application PROPERTIES OUTPUT_N
+ 
+ INSTALL(TARGETS g2o_simulator_library g2o_simulator2d_application g2o_simulator3d_application g2o_anonymize_observations_application
+   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
+ )
+ 
+ FILE(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp")
+diff --git a/g2o/apps/g2o_viewer/CMakeLists.txt b/g2o/apps/g2o_viewer/CMakeLists.txt
+index 3a14308..539bcf3 100644
+--- a/g2o/apps/g2o_viewer/CMakeLists.txt
++++ b/g2o/apps/g2o_viewer/CMakeLists.txt
+@@ -39,8 +39,8 @@ TARGET_LINK_LIBRARIES(g2o_viewer viewer_library)
+ 
+ INSTALL(TARGETS g2o_viewer viewer_library
+   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
+ )
+ 
+ FILE(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp")
+diff --git a/g2o/apps/linked_binaries/CMakeLists.txt b/g2o/apps/linked_binaries/CMakeLists.txt
+index e6127ce..6c78e7c 100644
+--- a/g2o/apps/linked_binaries/CMakeLists.txt
++++ b/g2o/apps/linked_binaries/CMakeLists.txt
+@@ -17,8 +17,8 @@ TARGET_LINK_LIBRARIES(g2o_cli_application_linked types_slam2d types_slam3d types
+ 
+ INSTALL(TARGETS g2o_cli_application_linked
+   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
+ )
+ 
+ 
+@@ -43,8 +43,8 @@ IF(QT4_FOUND AND QGLVIEWER_FOUND)
+ 
+   INSTALL(TARGETS g2o_viewer_linked
+     RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-    ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
++    ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
+   )
+ ENDIF()
+ 
+diff --git a/g2o/core/CMakeLists.txt b/g2o/core/CMakeLists.txt
+index 13fd51f..80982cb 100644
+--- a/g2o/core/CMakeLists.txt
++++ b/g2o/core/CMakeLists.txt
+@@ -45,8 +45,8 @@ TARGET_LINK_LIBRARIES(core stuff)
+ 
+ INSTALL(TARGETS core
+   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
+ )
+ 
+ FILE(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp")
+diff --git a/g2o/examples/interactive_slam/g2o_incremental/CMakeLists.txt b/g2o/examples/interactive_slam/g2o_incremental/CMakeLists.txt
+index 3c29634..01a9262 100644
+--- a/g2o/examples/interactive_slam/g2o_incremental/CMakeLists.txt
++++ b/g2o/examples/interactive_slam/g2o_incremental/CMakeLists.txt
+@@ -14,8 +14,8 @@ SET_TARGET_PROPERTIES(g2o_incremental_application PROPERTIES OUTPUT_NAME g2o_inc
+ 
+ INSTALL(TARGETS g2o_incremental_library g2o_incremental_application
+   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
+ )
+ 
+ FILE(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp")
+diff --git a/g2o/examples/interactive_slam/g2o_interactive/CMakeLists.txt b/g2o/examples/interactive_slam/g2o_interactive/CMakeLists.txt
+index ba36b7f..a3a43e3 100644
+--- a/g2o/examples/interactive_slam/g2o_interactive/CMakeLists.txt
++++ b/g2o/examples/interactive_slam/g2o_interactive/CMakeLists.txt
+@@ -20,8 +20,8 @@ SET_TARGET_PROPERTIES(g2o_online_application PROPERTIES OUTPUT_NAME g2o_online${
+ 
+ INSTALL(TARGETS g2o_interactive_library g2o_online_application
+   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
+ )
+ 
+ FILE(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp")
+diff --git a/g2o/examples/interactive_slam/slam_parser/example/CMakeLists.txt b/g2o/examples/interactive_slam/slam_parser/example/CMakeLists.txt
+index bac6288..fc4740f 100644
+--- a/g2o/examples/interactive_slam/slam_parser/example/CMakeLists.txt
++++ b/g2o/examples/interactive_slam/slam_parser/example/CMakeLists.txt
+@@ -13,8 +13,8 @@ SET_TARGET_PROPERTIES(test_slam_interface PROPERTIES OUTPUT_NAME test_slam_inter
+ 
+ #INSTALL(TARGETS example_library
+   #RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-  #LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-  #ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++  #LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
++  #ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
+ #)
+ 
+ #FILE(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
+diff --git a/g2o/examples/interactive_slam/slam_parser/interface/CMakeLists.txt b/g2o/examples/interactive_slam/slam_parser/interface/CMakeLists.txt
+index 3b7672e..d8ecae3 100644
+--- a/g2o/examples/interactive_slam/slam_parser/interface/CMakeLists.txt
++++ b/g2o/examples/interactive_slam/slam_parser/interface/CMakeLists.txt
+@@ -23,8 +23,8 @@ TARGET_LINK_LIBRARIES(interface_library parser_library)
+ 
+ INSTALL(TARGETS interface_library
+   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
+ )
+ 
+ FILE(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
+diff --git a/g2o/examples/interactive_slam/slam_parser/parser/CMakeLists.txt b/g2o/examples/interactive_slam/slam_parser/parser/CMakeLists.txt
+index d6ef107..2be80e5 100644
+--- a/g2o/examples/interactive_slam/slam_parser/parser/CMakeLists.txt
++++ b/g2o/examples/interactive_slam/slam_parser/parser/CMakeLists.txt
+@@ -29,8 +29,8 @@ SET_TARGET_PROPERTIES(parser_library PROPERTIES OUTPUT_NAME ${LIB_PREFIX}parser)
+ 
+ INSTALL(TARGETS parser_library
+   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
+ )
+ 
+ FILE(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.hh")
+diff --git a/g2o/solvers/cholmod/CMakeLists.txt b/g2o/solvers/cholmod/CMakeLists.txt
+index 977e945..512cf84 100644
+--- a/g2o/solvers/cholmod/CMakeLists.txt
++++ b/g2o/solvers/cholmod/CMakeLists.txt
+@@ -12,8 +12,8 @@ TARGET_LINK_LIBRARIES(solver_cholmod ${CHOLMOD_LIBRARIES} ${BLAS_LIBRARIES} ${LA
+ 
+ INSTALL(TARGETS solver_cholmod
+   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
+ )
+ 
+ FILE(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp")
+diff --git a/g2o/solvers/csparse/CMakeLists.txt b/g2o/solvers/csparse/CMakeLists.txt
+index 20728d1..06e59e8 100644
+--- a/g2o/solvers/csparse/CMakeLists.txt
++++ b/g2o/solvers/csparse/CMakeLists.txt
+@@ -25,8 +25,8 @@ TARGET_LINK_LIBRARIES(solver_csparse csparse_extension core)
+ 
+ INSTALL(TARGETS solver_csparse csparse_extension
+   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
+ )
+ FILE(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp")
+ INSTALL(FILES ${headers} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/g2o/solvers/csparse)
+diff --git a/g2o/solvers/dense/CMakeLists.txt b/g2o/solvers/dense/CMakeLists.txt
+index 5d41966..b7679b5 100644
+--- a/g2o/solvers/dense/CMakeLists.txt
++++ b/g2o/solvers/dense/CMakeLists.txt
+@@ -8,8 +8,8 @@ TARGET_LINK_LIBRARIES(solver_dense core)
+ 
+ INSTALL(TARGETS solver_dense
+   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
+ )
+ 
+ FILE(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp")
+diff --git a/g2o/solvers/eigen/CMakeLists.txt b/g2o/solvers/eigen/CMakeLists.txt
+index 5fe9d6d..ec27144 100644
+--- a/g2o/solvers/eigen/CMakeLists.txt
++++ b/g2o/solvers/eigen/CMakeLists.txt
+@@ -7,8 +7,8 @@ TARGET_LINK_LIBRARIES(solver_eigen core)
+ 
+ INSTALL(TARGETS solver_eigen
+   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
+ )
+ FILE(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp")
+ INSTALL(FILES ${headers} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/g2o/solvers/eigen)
+diff --git a/g2o/solvers/pcg/CMakeLists.txt b/g2o/solvers/pcg/CMakeLists.txt
+index b29b333..2697e95 100644
+--- a/g2o/solvers/pcg/CMakeLists.txt
++++ b/g2o/solvers/pcg/CMakeLists.txt
+@@ -10,8 +10,8 @@ TARGET_LINK_LIBRARIES(solver_pcg core)
+ 
+ INSTALL(TARGETS solver_pcg
+   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
+ )
+ 
+ FILE(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp")
+diff --git a/g2o/solvers/slam2d_linear/CMakeLists.txt b/g2o/solvers/slam2d_linear/CMakeLists.txt
+index 6d473e5..60ce081 100644
+--- a/g2o/solvers/slam2d_linear/CMakeLists.txt
++++ b/g2o/solvers/slam2d_linear/CMakeLists.txt
+@@ -11,8 +11,8 @@ TARGET_LINK_LIBRARIES(solver_slam2d_linear solver_csparse types_slam2d)
+ 
+ INSTALL(TARGETS solver_slam2d_linear
+   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
+ )
+ 
+ FILE(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp")
+diff --git a/g2o/solvers/structure_only/CMakeLists.txt b/g2o/solvers/structure_only/CMakeLists.txt
+index 9f7b330..f141882 100644
+--- a/g2o/solvers/structure_only/CMakeLists.txt
++++ b/g2o/solvers/structure_only/CMakeLists.txt
+@@ -8,8 +8,8 @@ TARGET_LINK_LIBRARIES(solver_structure_only core)
+ 
+ INSTALL(TARGETS solver_structure_only
+   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
+ )
+ 
+ FILE(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp")
+diff --git a/g2o/stuff/CMakeLists.txt b/g2o/stuff/CMakeLists.txt
+index 7f4dbcc..d84534a 100644
+--- a/g2o/stuff/CMakeLists.txt
++++ b/g2o/stuff/CMakeLists.txt
+@@ -14,8 +14,8 @@ SET_TARGET_PROPERTIES(stuff PROPERTIES OUTPUT_NAME ${LIB_PREFIX}stuff)
+ 
+ INSTALL(TARGETS stuff
+   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
+ )
+ 
+ # build our OpenGL helper library
+@@ -25,8 +25,8 @@ IF(OPENGL_FOUND AND G2O_HAVE_OPENGL)
+   )
+   INSTALL(TARGETS opengl_helper
+     RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-    ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
++    ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
+   )
+   TARGET_LINK_LIBRARIES(opengl_helper ${OPENGL_LIBRARIES})
+   SET_TARGET_PROPERTIES(opengl_helper PROPERTIES OUTPUT_NAME ${LIB_PREFIX}opengl_helper)
+diff --git a/g2o/types/data/CMakeLists.txt b/g2o/types/data/CMakeLists.txt
+index 7c930dc..3de1c12 100644
+--- a/g2o/types/data/CMakeLists.txt
++++ b/g2o/types/data/CMakeLists.txt
+@@ -19,8 +19,8 @@ ENDIF()
+ 
+ INSTALL(TARGETS types_data
+   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
+ )
+ 
+ FILE(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp")
+diff --git a/g2o/types/deprecated/slam3d/CMakeLists.txt b/g2o/types/deprecated/slam3d/CMakeLists.txt
+index a4e3b82..c5ce16e 100644
+--- a/g2o/types/deprecated/slam3d/CMakeLists.txt
++++ b/g2o/types/deprecated/slam3d/CMakeLists.txt
+@@ -31,8 +31,8 @@ TARGET_LINK_LIBRARIES(deprecated_types_slam3d ${OPENGL_gl_LIBRARY} core types_sl
+ 
+ INSTALL(TARGETS deprecated_types_slam3d
+   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
+ )
+ 
+ FILE(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp")
+diff --git a/g2o/types/icp/CMakeLists.txt b/g2o/types/icp/CMakeLists.txt
+index c8d6bfd..04160c0 100644
+--- a/g2o/types/icp/CMakeLists.txt
++++ b/g2o/types/icp/CMakeLists.txt
+@@ -9,8 +9,8 @@ TARGET_LINK_LIBRARIES(types_icp types_sba types_slam3d)
+ 
+ INSTALL(TARGETS types_icp
+   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
+ )
+ 
+ FILE(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp")
+diff --git a/g2o/types/sba/CMakeLists.txt b/g2o/types/sba/CMakeLists.txt
+index 1af8fc5..7a7bbf5 100644
+--- a/g2o/types/sba/CMakeLists.txt
++++ b/g2o/types/sba/CMakeLists.txt
+@@ -10,8 +10,8 @@ TARGET_LINK_LIBRARIES(types_sba core types_slam3d)
+ 
+ INSTALL(TARGETS types_sba
+   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
+ )
+ 
+ FILE(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp")
+diff --git a/g2o/types/sclam2d/CMakeLists.txt b/g2o/types/sclam2d/CMakeLists.txt
+index 311f396..02cb8cd 100644
+--- a/g2o/types/sclam2d/CMakeLists.txt
++++ b/g2o/types/sclam2d/CMakeLists.txt
+@@ -16,8 +16,8 @@ ENDIF()
+ 
+ INSTALL(TARGETS types_sclam2d
+   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
+ )
+ 
+ FILE(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp")
+diff --git a/g2o/types/sim3/CMakeLists.txt b/g2o/types/sim3/CMakeLists.txt
+index c493599..17df34c 100644
+--- a/g2o/types/sim3/CMakeLists.txt
++++ b/g2o/types/sim3/CMakeLists.txt
+@@ -9,8 +9,8 @@ TARGET_LINK_LIBRARIES(types_sim3 types_sba)
+ 
+ INSTALL(TARGETS types_sim3
+   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
+ )
+ 
+ FILE(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp")
+diff --git a/g2o/types/slam2d/CMakeLists.txt b/g2o/types/slam2d/CMakeLists.txt
+index a8a435b..dc571f0 100644
+--- a/g2o/types/slam2d/CMakeLists.txt
++++ b/g2o/types/slam2d/CMakeLists.txt
+@@ -25,8 +25,8 @@ ENDIF()
+ 
+ INSTALL(TARGETS types_slam2d
+   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
+ )
+ 
+ FILE(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp")
+diff --git a/g2o/types/slam2d_addons/CMakeLists.txt b/g2o/types/slam2d_addons/CMakeLists.txt
+index bfeb6f5..809b60e 100644
+--- a/g2o/types/slam2d_addons/CMakeLists.txt
++++ b/g2o/types/slam2d_addons/CMakeLists.txt
+@@ -21,8 +21,8 @@ ENDIF()
+ 
+ INSTALL(TARGETS types_slam2d_addons
+   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
+ )
+ 
+ FILE(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp")
+diff --git a/g2o/types/slam3d/CMakeLists.txt b/g2o/types/slam3d/CMakeLists.txt
+index 8b1eafb..4aa1b67 100644
+--- a/g2o/types/slam3d/CMakeLists.txt
++++ b/g2o/types/slam3d/CMakeLists.txt
+@@ -53,8 +53,8 @@ TARGET_LINK_LIBRARIES(test_slam3d_jacobian types_slam3d)
+ 
+ INSTALL(TARGETS types_slam3d
+   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
+ )
+ 
+ FILE(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp")
+diff --git a/g2o/types/slam3d_addons/CMakeLists.txt b/g2o/types/slam3d_addons/CMakeLists.txt
+index 8331c2a..59c0692 100644
+--- a/g2o/types/slam3d_addons/CMakeLists.txt
++++ b/g2o/types/slam3d_addons/CMakeLists.txt
+@@ -26,8 +26,8 @@ ENDIF()
+ 
+ INSTALL(TARGETS types_slam3d_addons
+   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
+ )
+ 
+ FILE(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp")
