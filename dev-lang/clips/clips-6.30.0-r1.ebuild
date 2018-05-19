@@ -9,8 +9,7 @@ SVNREL="20090722svn"
 
 DESCRIPTION="Language for developing expert systems"
 HOMEPAGE="http://clipsrules.sourceforge.net/"
-SRC_URI="http://ftp.halifax.rwth-aachen.de/fedora/linux/development/25/Everything/source/tree/Packages/c/${PF}-0.12.${SVNREL}.fc24.src.rpm"
-
+SRC_URI="http://ftp.halifax.rwth-aachen.de/fedora/linux/releases/28/Everything/source/tree/Packages/c/clips-${PV}-0.17.${SVNREL}.fc28.src.rpm"
 LICENSE="public-domain"
 SLOT="0"
 KEYWORDS="~x86 ~amd64"
