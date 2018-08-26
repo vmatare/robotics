@@ -18,9 +18,9 @@ IUSE="doc"
 DEPEND="sys-libs/libtermcap-compat"
 RDEPEND="${DEPEND}"
 
-S="${WORKDIR}/${PF}.${SVNREL}"
+S="${WORKDIR}/clips-${PV}.${SVNREL}"
 
-DOCS_BASE="${WORKDIR}/${PF}.${SVNREL}-doc"
+DOCS_BASE="${S}-doc"
 
 src_prepare() {
 	mv "${DOCS_BASE}"/* "${S}"/documentation
