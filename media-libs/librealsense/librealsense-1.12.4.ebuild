@@ -12,11 +12,21 @@ inherit cmake-utils
 LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE=""
+IUSE="+examples"
 
-DEPEND="virtual/pkgconfig virtual/libusb"
+DEPEND="virtual/pkgconfig virtual/libusb
+	examples? ( media-libs/glfw )
+"
 RDEPEND="${DEPEND}"
 
 PATCHES=(
 	"${FILESDIR}/0001-cmake-don-t-call-ldconfig-during-install.patch"
 )
+
+
+src_configure() {
+	local mycmakeargs=(
+		-DBUILD_EXAMPLES="$(usex examples)"
+	)
+	cmake-utils_src_configure
+}
