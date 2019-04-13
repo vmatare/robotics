@@ -1,0 +1,24 @@
+From f570ec154ffb7241d020243dd25f57ac7f889e36 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Victor=20Matar=C3=A9?= <matare@fh-aachen.de>
+Date: Sat, 13 Apr 2019 19:25:34 +0200
+Subject: [PATCH] cmake: don't call ldconfig during install
+
+---
+ CMakeLists.txt | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8070cb4d..37ed4cca 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -248,7 +248,6 @@ else()
+             DESTINATION ${CMAKECONFIG_INSTALL_DIR})
+     install(FILES "${CMAKE_CURRENT_BINARY_DIR}/realsenseConfig.cmake"
+             DESTINATION ${CMAKECONFIG_INSTALL_DIR})
+-    install(CODE "execute_process(COMMAND ldconfig)")
+ endif()
+ 
+ option(BUILD_EXAMPLES "Build realsense examples." OFF)
+-- 
+2.21.0
+
