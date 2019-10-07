@@ -1,0 +1,31 @@
+From 0d8cc410cb1c88fe24f5b5f1eb5246677840d61d Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Victor=20Matar=C3=A9?= <matare@fh-aachen.de>
+Date: Wed, 4 Apr 2018 17:34:22 +0200
+Subject: [PATCH] cmake: fix deprecated _BSD_SOURCE
+
+superseded by _DEFAULT_SOURCE since glibc-2.20. Quoting from the man
+page:
+
+  To allow code that requires _BSD_SOURCE in glibc 2.19 and earlier and
+  _DEFAULT_SOURCE in glibc 2.20 and later to compile without warnings,
+  define both _BSD_SOURCE and _DEFAULT_SOURCE
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c0c7e0cb..01cbdabf 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -175,7 +175,7 @@ if(UNIX)
+       message( FATAL_ERROR "Failed to find libusb-1.0" )
+     endif(LIBUSB1_FOUND)
+ 
+-    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -fPIC -pedantic -g -D_BSD_SOURCE")
++    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -fPIC -pedantic -g -D_DEFAULT_SOURCE -D_BSD_SOURCE")
+     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -pedantic -g -Ofast -Wno-missing-field-initializers")
+     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-switch -Wno-multichar")
+ 
+-- 
+2.21.0
+

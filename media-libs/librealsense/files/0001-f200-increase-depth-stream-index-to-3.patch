@@ -1,0 +1,57 @@
+From 601c909559526533b35d222b9529d0ee92a77ce3 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Victor=20Matar=C3=A9?= <matare@fh-aachen.de>
+Date: Sun, 14 Apr 2019 14:55:07 +0200
+Subject: [PATCH] f200: increase depth stream index to 3
+
+---
+ src/f200.cpp         | 10 +++++-----
+ src/ivcam-device.cpp |  2 +-
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/src/f200.cpp b/src/f200.cpp
+index edfd256e..ba7e73de 100644
+--- a/src/f200.cpp
++++ b/src/f200.cpp
+@@ -58,21 +58,21 @@ namespace rsimpl
+         }
+ 
+         // Depth and IR modes on subdevice 1
+-        info.stream_subdevices[RS_STREAM_DEPTH] = 1;
+-        info.stream_subdevices[RS_STREAM_INFRARED] = 1;
++        info.stream_subdevices[RS_STREAM_DEPTH] = 3;
++        info.stream_subdevices[RS_STREAM_INFRARED] = 3;
+         for(auto & m : f200_ir_only_modes)
+         {
+             for(auto fps : m.fps)
+             {
+-                info.subdevice_modes.push_back({1, m.dims, pf_f200_invi, fps, MakeDepthIntrinsics(c, m.dims), {}, {0}});
++                info.subdevice_modes.push_back({3, m.dims, pf_f200_invi, fps, MakeDepthIntrinsics(c, m.dims), {}, {0}});
+             }
+         }
+         for(auto & m : f200_depth_modes)
+         {
+             for(auto fps : m.fps)
+             {
+-                info.subdevice_modes.push_back({1, m.dims, pf_invz, fps, MakeDepthIntrinsics(c, m.dims), {}, {0}});
+-                info.subdevice_modes.push_back({1, m.dims, pf_f200_inzi, fps, MakeDepthIntrinsics(c, m.dims), {}, {0}});
++                info.subdevice_modes.push_back({3, m.dims, pf_invz, fps, MakeDepthIntrinsics(c, m.dims), {}, {0}});
++                info.subdevice_modes.push_back({3, m.dims, pf_f200_inzi, fps, MakeDepthIntrinsics(c, m.dims), {}, {0}});
+             }
+         }
+ 
+diff --git a/src/ivcam-device.cpp b/src/ivcam-device.cpp
+index 288595bd..83e909c1 100644
+--- a/src/ivcam-device.cpp
++++ b/src/ivcam-device.cpp
+@@ -227,7 +227,7 @@ namespace rsimpl
+     std::vector<std::shared_ptr<frame_timestamp_reader>> iv_camera::create_frame_timestamp_readers() const
+     {
+         auto the_reader = std::make_shared<rolling_timestamp_reader>(); // single shared timestamp reader for all subdevices
+-        return { the_reader, the_reader }; // clone the reference for color and depth
++        return { the_reader, the_reader, the_reader, the_reader, the_reader }; // clone the reference for color and depth
+     }
+ 
+ } // namespace rsimpl::f200
+-- 
+2.21.0
+

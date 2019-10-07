@@ -20,6 +20,8 @@ DEPEND="virtual/pkgconfig virtual/libusb
 RDEPEND="${DEPEND}"
 
 PATCHES=(
+	"${FILESDIR}/0001-cmake-fix-deprecated-_BSD_SOURCE.patch"
+	"${FILESDIR}/0001-f200-increase-depth-stream-index-to-3.patch"
 	"${FILESDIR}/0001-cmake-don-t-call-ldconfig-during-install.patch"
 )
 
