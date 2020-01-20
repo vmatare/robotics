@@ -7,7 +7,7 @@ inherit git-r3 cmake-utils
 
 DESCRIPTION="Open Source C++ and Python OPC-UA Server and Client Libraries and Tools"
 HOMEPAGE="https://freeopcua.github.io/"
-EGIT_REPO_URI="https://github.com/vmatare/freeopcua.git"
+EGIT_REPO_URI="https://github.com/FreeOpcUa/freeopcua.git"
 
 LICENSE="GPLv3"
 SLOT="0"
