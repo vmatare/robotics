@@ -1,0 +1,365 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 77c09d3..4e6213b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -4,6 +4,7 @@ set(CMAKE_LEGACY_CYGWIN_WIN32 0)
+ project(g2o)
+ 
+ include(CPack)
++include(GNUInstallDirs)
+ 
+ # The library prefix
+ set(LIB_PREFIX g2o_)
+@@ -62,17 +63,17 @@ set(g2o_RUNTIME_OUTPUT_DIRECTORY ${g2o_SOURCE_DIR}/bin CACHE PATH "Target for th
+ if(WIN32)
+   set(g2o_LIBRARY_OUTPUT_DIRECTORY ${g2o_SOURCE_DIR}/bin CACHE PATH "Target for the libraries")
+ else(WIN32)
+-  set(g2o_LIBRARY_OUTPUT_DIRECTORY ${g2o_SOURCE_DIR}/lib CACHE PATH "Target for the libraries")
++  set(g2o_LIBRARY_OUTPUT_DIRECTORY ${g2o_SOURCE_DIR}/${CMAKE_INSTALL_LIBDIR} CACHE PATH "Target for the libraries")
+ endif(WIN32)
+ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${g2o_LIBRARY_OUTPUT_DIRECTORY})
+ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${g2o_LIBRARY_OUTPUT_DIRECTORY})
+ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${g2o_RUNTIME_OUTPUT_DIRECTORY})
+ 
+ # Set standard installation directories
+-set(RUNTIME_DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+-set(LIBRARY_DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+-set(ARCHIVE_DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+-set(INCLUDES_DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
++set(RUNTIME_DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR})
++set(LIBRARY_DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
++set(ARCHIVE_DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
++set(INCLUDES_DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR})
+ set(INCLUDES_INSTALL_DIR ${INCLUDES_DESTINATION}/g2o)
+ 
+ # Set search directory for looking for our custom CMake scripts to
+diff --git a/EXTERNAL/csparse/CMakeLists.txt b/EXTERNAL/csparse/CMakeLists.txt
+index 909a62e..aa84295 100644
+--- a/EXTERNAL/csparse/CMakeLists.txt
++++ b/EXTERNAL/csparse/CMakeLists.txt
+@@ -61,7 +61,7 @@ add_library(csparse ${G2O_LGPL_LIB_TYPE}
+ 
+ set_target_properties(csparse PROPERTIES OUTPUT_NAME ${LIB_PREFIX}ext_csparse)
+ if (APPLE)
+-  set_target_properties(csparse PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
++  set_target_properties(csparse PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+ endif()
+ if (UNIX)
+   target_link_libraries(csparse PUBLIC m)
+diff --git a/EXTERNAL/freeglut/CMakeLists.txt b/EXTERNAL/freeglut/CMakeLists.txt
+index a4f5379..bf11637 100644
+--- a/EXTERNAL/freeglut/CMakeLists.txt
++++ b/EXTERNAL/freeglut/CMakeLists.txt
+@@ -8,7 +8,7 @@ target_link_libraries(freeglut_minimal PUBLIC ${G2O_OPENGL_TARGET} ${G2O_EIGEN3_
+ 
+ set_target_properties(freeglut_minimal PROPERTIES OUTPUT_NAME ${LIB_PREFIX}ext_freeglut_minimal)
+ if (APPLE)
+-  set_target_properties(freeglut_minimal PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
++  set_target_properties(freeglut_minimal PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+ endif()
+ 
+ install(TARGETS freeglut_minimal
+diff --git a/g2o/apps/g2o_cli/CMakeLists.txt b/g2o/apps/g2o_cli/CMakeLists.txt
+index 8b660c8..de0457e 100644
+--- a/g2o/apps/g2o_cli/CMakeLists.txt
++++ b/g2o/apps/g2o_cli/CMakeLists.txt
+@@ -7,7 +7,7 @@ add_library(g2o_cli_library ${G2O_LIB_TYPE}
+ 
+ set_target_properties(g2o_cli_library PROPERTIES OUTPUT_NAME ${LIB_PREFIX}cli)
+ if (APPLE)
+-  set_target_properties(g2o_cli_library PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
++  set_target_properties(g2o_cli_library PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+ endif()
+ 
+ set_property(TARGET g2o_cli_library APPEND PROPERTY COMPILE_DEFINITIONS G2O_DEFAULT_TYPES_DIR_="${CMAKE_LIBRARY_OUTPUT_DIRECTORY}" G2O_DEFAULT_SOLVERS_DIR_="${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
+diff --git a/g2o/apps/g2o_hierarchical/CMakeLists.txt b/g2o/apps/g2o_hierarchical/CMakeLists.txt
+index b94730a..7ac84c8 100644
+--- a/g2o/apps/g2o_hierarchical/CMakeLists.txt
++++ b/g2o/apps/g2o_hierarchical/CMakeLists.txt
+@@ -18,7 +18,7 @@ add_library(g2o_hierarchical_library ${G2O_LIB_TYPE}
+ 
+ set_target_properties(g2o_hierarchical_library PROPERTIES OUTPUT_NAME ${LIB_PREFIX}hierarchical)
+ if (APPLE)
+-  set_target_properties(g2o_hierarchical_library PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
++  set_target_properties(g2o_hierarchical_library PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+ endif()
+ 
+ target_link_libraries(g2o_hierarchical_library core)
+diff --git a/g2o/apps/g2o_simulator/CMakeLists.txt b/g2o/apps/g2o_simulator/CMakeLists.txt
+index d698197..573188e 100644
+--- a/g2o/apps/g2o_simulator/CMakeLists.txt
++++ b/g2o/apps/g2o_simulator/CMakeLists.txt
+@@ -26,7 +26,7 @@ add_library(g2o_simulator_library ${G2O_LIB_TYPE}
+ 
+ set_target_properties(g2o_simulator_library PROPERTIES OUTPUT_NAME ${LIB_PREFIX}simulator)
+ if (APPLE)
+-  set_target_properties(g2o_simulator_library PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
++  set_target_properties(g2o_simulator_library PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+ endif()
+ 
+ target_link_libraries(g2o_simulator_library types_slam3d_addons types_slam3d types_slam2d_addons types_slam2d  core)
+diff --git a/g2o/apps/g2o_viewer/CMakeLists.txt b/g2o/apps/g2o_viewer/CMakeLists.txt
+index 24469f3..29534ec 100644
+--- a/g2o/apps/g2o_viewer/CMakeLists.txt
++++ b/g2o/apps/g2o_viewer/CMakeLists.txt
+@@ -23,7 +23,7 @@ add_library(viewer_library ${G2O_LIB_TYPE}
+ )
+ set_target_properties(viewer_library PROPERTIES OUTPUT_NAME ${LIB_PREFIX}viewer)
+ if (APPLE)
+-  set_target_properties(viewer_library PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
++  set_target_properties(viewer_library PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+ endif()
+ 
+ add_executable(g2o_viewer
+diff --git a/g2o/core/CMakeLists.txt b/g2o/core/CMakeLists.txt
+index 62ea0e3..9cd13f0 100644
+--- a/g2o/core/CMakeLists.txt
++++ b/g2o/core/CMakeLists.txt
+@@ -44,7 +44,7 @@ set_target_properties(core PROPERTIES OUTPUT_NAME ${LIB_PREFIX}core)
+ target_link_libraries(core PUBLIC stuff ${G2O_EIGEN3_EIGEN_TARGET})
+ 
+ if (APPLE)
+-  set_target_properties(core PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
++  set_target_properties(core PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+ endif()
+ 
+ install(TARGETS core
+diff --git a/g2o/solvers/cholmod/CMakeLists.txt b/g2o/solvers/cholmod/CMakeLists.txt
+index da59957..95fa816 100644
+--- a/g2o/solvers/cholmod/CMakeLists.txt
++++ b/g2o/solvers/cholmod/CMakeLists.txt
+@@ -11,7 +11,7 @@ include_directories(${CHOLMOD_INCLUDE_DIR})
+ 
+ set_target_properties(solver_cholmod PROPERTIES OUTPUT_NAME ${LIB_PREFIX}solver_cholmod)
+ if (APPLE)
+-  set_target_properties(solver_cholmod PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
++  set_target_properties(solver_cholmod PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+ endif()
+ 
+ add_definitions(${BLAS_DEFINITIONS} ${LAPACK_DEFINITIONS})
+diff --git a/g2o/solvers/csparse/CMakeLists.txt b/g2o/solvers/csparse/CMakeLists.txt
+index 60d1269..b3ea0f1 100644
+--- a/g2o/solvers/csparse/CMakeLists.txt
++++ b/g2o/solvers/csparse/CMakeLists.txt
+@@ -11,7 +11,7 @@ add_library(csparse_extension ${G2O_LGPL_LIB_TYPE}
+ )
+ set_target_properties(csparse_extension PROPERTIES OUTPUT_NAME ${LIB_PREFIX}csparse_extension)
+ if (APPLE)
+-  set_target_properties(csparse_extension PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
++  set_target_properties(csparse_extension PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+ endif()
+ 
+ if(BUILD_CSPARSE)
+@@ -27,7 +27,7 @@ add_library(solver_csparse ${G2O_LIB_TYPE}
+ )
+ set_target_properties(solver_csparse PROPERTIES OUTPUT_NAME ${LIB_PREFIX}solver_csparse)
+ if (APPLE)
+-  set_target_properties(solver_csparse PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
++  set_target_properties(solver_csparse PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+ endif()
+ 
+ target_link_libraries(solver_csparse
+diff --git a/g2o/solvers/dense/CMakeLists.txt b/g2o/solvers/dense/CMakeLists.txt
+index 6879850..64c6fc5 100644
+--- a/g2o/solvers/dense/CMakeLists.txt
++++ b/g2o/solvers/dense/CMakeLists.txt
+@@ -4,7 +4,7 @@ add_library(solver_dense ${G2O_LIB_TYPE}
+ 
+ set_target_properties(solver_dense PROPERTIES OUTPUT_NAME ${LIB_PREFIX}solver_dense)
+ if (APPLE)
+-  set_target_properties(solver_dense PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
++  set_target_properties(solver_dense PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+ endif()
+ 
+ target_link_libraries(solver_dense core)
+diff --git a/g2o/solvers/eigen/CMakeLists.txt b/g2o/solvers/eigen/CMakeLists.txt
+index 2521ae7..ee85fe6 100644
+--- a/g2o/solvers/eigen/CMakeLists.txt
++++ b/g2o/solvers/eigen/CMakeLists.txt
+@@ -4,7 +4,7 @@ add_library(solver_eigen ${G2O_LIB_TYPE}
+ )
+ set_target_properties(solver_eigen PROPERTIES OUTPUT_NAME ${LIB_PREFIX}solver_eigen)
+ if (APPLE)
+-  set_target_properties(solver_eigen PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
++  set_target_properties(solver_eigen PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+ endif()
+ target_link_libraries(solver_eigen core)
+ 
+diff --git a/g2o/solvers/pcg/CMakeLists.txt b/g2o/solvers/pcg/CMakeLists.txt
+index 3f3681d..e38f70c 100644
+--- a/g2o/solvers/pcg/CMakeLists.txt
++++ b/g2o/solvers/pcg/CMakeLists.txt
+@@ -6,7 +6,7 @@ add_library(solver_pcg ${G2O_LIB_TYPE}
+ 
+ set_target_properties(solver_pcg PROPERTIES OUTPUT_NAME ${LIB_PREFIX}solver_pcg)
+ if (APPLE)
+-  set_target_properties(solver_pcg PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
++  set_target_properties(solver_pcg PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+ endif()
+ 
+ target_link_libraries(solver_pcg core)
+diff --git a/g2o/solvers/slam2d_linear/CMakeLists.txt b/g2o/solvers/slam2d_linear/CMakeLists.txt
+index 7ec4bcd..a0fc1bf 100644
+--- a/g2o/solvers/slam2d_linear/CMakeLists.txt
++++ b/g2o/solvers/slam2d_linear/CMakeLists.txt
+@@ -12,7 +12,7 @@ include_directories(${CSPARSE_INCLUDE_DIR})
+ 
+ set_target_properties(solver_slam2d_linear PROPERTIES OUTPUT_NAME ${LIB_PREFIX}solver_slam2d_linear)
+ if (APPLE)
+-  set_target_properties(solver_slam2d_linear PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
++  set_target_properties(solver_slam2d_linear PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+ endif()
+ 
+ target_link_libraries(solver_slam2d_linear solver_csparse types_slam2d)
+diff --git a/g2o/solvers/structure_only/CMakeLists.txt b/g2o/solvers/structure_only/CMakeLists.txt
+index 71dfcc4..7def495 100644
+--- a/g2o/solvers/structure_only/CMakeLists.txt
++++ b/g2o/solvers/structure_only/CMakeLists.txt
+@@ -5,7 +5,7 @@ add_library(solver_structure_only ${G2O_LIB_TYPE}
+ 
+ set_target_properties(solver_structure_only PROPERTIES OUTPUT_NAME ${LIB_PREFIX}solver_structure_only)
+ if (APPLE)
+-  set_target_properties(solver_structure_only PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
++  set_target_properties(solver_structure_only PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+ endif()
+ 
+ target_link_libraries(solver_structure_only core)
+diff --git a/g2o/stuff/CMakeLists.txt b/g2o/stuff/CMakeLists.txt
+index 618e5f1..1698ed4 100644
+--- a/g2o/stuff/CMakeLists.txt
++++ b/g2o/stuff/CMakeLists.txt
+@@ -14,7 +14,7 @@ set_target_properties(stuff PROPERTIES OUTPUT_NAME ${LIB_PREFIX}stuff)
+ target_link_libraries(stuff PUBLIC ${G2O_EIGEN3_EIGEN_TARGET})
+ 
+ if (APPLE)
+-  set_target_properties(stuff PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
++  set_target_properties(stuff PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+ endif()
+ 
+ install(TARGETS stuff
+@@ -31,7 +31,7 @@ if(OPENGL_FOUND AND G2O_HAVE_OPENGL)
+     opengl_primitives.cpp opengl_primitives.h
+     )
+   if (APPLE)
+-  set_target_properties(opengl_helper PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
++  set_target_properties(opengl_helper PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+ endif()
+   install(TARGETS opengl_helper
+     EXPORT ${G2O_TARGETS_EXPORT_NAME}
+diff --git a/g2o/types/data/CMakeLists.txt b/g2o/types/data/CMakeLists.txt
+index 02a8c7b..ba4d1b2 100644
+--- a/g2o/types/data/CMakeLists.txt
++++ b/g2o/types/data/CMakeLists.txt
+@@ -12,7 +12,7 @@ add_library(types_data ${G2O_LIB_TYPE}
+ 
+ set_target_properties(types_data PROPERTIES OUTPUT_NAME ${LIB_PREFIX}types_data)
+ if (APPLE)
+-  set_target_properties(types_data PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
++  set_target_properties(types_data PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+ endif()
+ 
+ 
+diff --git a/g2o/types/icp/CMakeLists.txt b/g2o/types/icp/CMakeLists.txt
+index 60df512..02c80e8 100644
+--- a/g2o/types/icp/CMakeLists.txt
++++ b/g2o/types/icp/CMakeLists.txt
+@@ -5,7 +5,7 @@ add_library(types_icp ${G2O_LIB_TYPE}
+ 
+ set_target_properties(types_icp PROPERTIES OUTPUT_NAME ${LIB_PREFIX}types_icp)
+ if (APPLE)
+-  set_target_properties(types_icp PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
++  set_target_properties(types_icp PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+ endif()
+ target_link_libraries(types_icp types_sba types_slam3d)
+ 
+diff --git a/g2o/types/sba/CMakeLists.txt b/g2o/types/sba/CMakeLists.txt
+index 3194178..04d784c 100644
+--- a/g2o/types/sba/CMakeLists.txt
++++ b/g2o/types/sba/CMakeLists.txt
+@@ -6,7 +6,7 @@ add_library(types_sba ${G2O_LIB_TYPE}
+ 
+ set_target_properties(types_sba PROPERTIES OUTPUT_NAME ${LIB_PREFIX}types_sba)
+ if (APPLE)
+-  set_target_properties(types_sba PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
++  set_target_properties(types_sba PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+ endif()
+ target_link_libraries(types_sba core types_slam3d)
+ 
+diff --git a/g2o/types/sclam2d/CMakeLists.txt b/g2o/types/sclam2d/CMakeLists.txt
+index 2db16ae..bb93453 100644
+--- a/g2o/types/sclam2d/CMakeLists.txt
++++ b/g2o/types/sclam2d/CMakeLists.txt
+@@ -9,7 +9,7 @@ add_library(types_sclam2d ${G2O_LIB_TYPE}
+ 
+ set_target_properties(types_sclam2d PROPERTIES OUTPUT_NAME ${LIB_PREFIX}types_sclam2d)
+ if (APPLE)
+-  set_target_properties(types_sclam2d PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
++  set_target_properties(types_sclam2d PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+ endif()
+ target_link_libraries(types_sclam2d types_slam2d core)
+ if(G2O_HAVE_OPENGL)
+diff --git a/g2o/types/sim3/CMakeLists.txt b/g2o/types/sim3/CMakeLists.txt
+index edc0bed..f4abbb5 100644
+--- a/g2o/types/sim3/CMakeLists.txt
++++ b/g2o/types/sim3/CMakeLists.txt
+@@ -5,7 +5,7 @@ add_library(types_sim3 ${G2O_LIB_TYPE}
+ 
+ set_target_properties(types_sim3 PROPERTIES OUTPUT_NAME ${LIB_PREFIX}types_sim3)
+ if (APPLE)
+-  set_target_properties(types_sim3 PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
++  set_target_properties(types_sim3 PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+ endif()
+ target_link_libraries(types_sim3 PUBLIC types_sba)
+ 
+diff --git a/g2o/types/slam2d/CMakeLists.txt b/g2o/types/slam2d/CMakeLists.txt
+index f0b191f..1a951e2 100644
+--- a/g2o/types/slam2d/CMakeLists.txt
++++ b/g2o/types/slam2d/CMakeLists.txt
+@@ -19,7 +19,7 @@ add_library(types_slam2d ${G2O_LIB_TYPE}
+ 
+ set_target_properties(types_slam2d PROPERTIES OUTPUT_NAME ${LIB_PREFIX}types_slam2d)
+ if (APPLE)
+-  set_target_properties(types_slam2d PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
++  set_target_properties(types_slam2d PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+ endif()
+ target_link_libraries(types_slam2d core)
+ if(G2O_HAVE_OPENGL)
+diff --git a/g2o/types/slam2d_addons/CMakeLists.txt b/g2o/types/slam2d_addons/CMakeLists.txt
+index d8cefbb..7018ab6 100644
+--- a/g2o/types/slam2d_addons/CMakeLists.txt
++++ b/g2o/types/slam2d_addons/CMakeLists.txt
+@@ -14,7 +14,7 @@ add_library(types_slam2d_addons ${G2O_LIB_TYPE}
+ 
+ set_target_properties(types_slam2d_addons PROPERTIES OUTPUT_NAME ${LIB_PREFIX}types_slam2d_addons)
+ if (APPLE)
+-  set_target_properties(types_slam2d_addons PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
++  set_target_properties(types_slam2d_addons PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+ endif()
+ target_link_libraries(types_slam2d_addons types_slam2d core)
+ if(G2O_HAVE_OPENGL)
+diff --git a/g2o/types/slam3d/CMakeLists.txt b/g2o/types/slam3d/CMakeLists.txt
+index 2feee5b..2c0deb3 100644
+--- a/g2o/types/slam3d/CMakeLists.txt
++++ b/g2o/types/slam3d/CMakeLists.txt
+@@ -42,7 +42,7 @@ add_library(types_slam3d ${G2O_LIB_TYPE}
+ 
+ set_target_properties(types_slam3d PROPERTIES OUTPUT_NAME ${LIB_PREFIX}types_slam3d)
+ if (APPLE)
+-  set_target_properties(types_slam3d PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
++  set_target_properties(types_slam3d PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+ endif()
+ target_link_libraries(types_slam3d core)
+ if(G2O_HAVE_OPENGL)
+diff --git a/g2o/types/slam3d_addons/CMakeLists.txt b/g2o/types/slam3d_addons/CMakeLists.txt
+index 06f7599..b269160 100644
+--- a/g2o/types/slam3d_addons/CMakeLists.txt
++++ b/g2o/types/slam3d_addons/CMakeLists.txt
+@@ -19,7 +19,7 @@ add_library(types_slam3d_addons ${G2O_LIB_TYPE}
+ 
+ set_target_properties(types_slam3d_addons PROPERTIES OUTPUT_NAME ${LIB_PREFIX}types_slam3d_addons)
+ if (APPLE)
+-  set_target_properties(types_slam3d_addons PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
++  set_target_properties(types_slam3d_addons PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+ endif()
+ target_link_libraries(types_slam3d_addons types_slam3d core)
+ if(G2O_HAVE_OPENGL)

@@ -6,7 +6,7 @@ EAPI=5
 
 inherit cmake-utils eutils
 
-DESCRIPTION="An open-source C++ framework for optimizing graph-based nonlinear error functions"
+DESCRIPTION="C++ framework for optimizing graph-based nonlinear error functions"
 HOMEPAGE="http://openslam.org/g2o.html"
 SRC_URI="https://github.com/RainerKuemmerle/g2o/archive/${PV}_git.tar.gz"
 
@@ -21,3 +21,6 @@ RDEPEND="${DEPEND}"
 
 S="${WORKDIR}/g2o-${PV}_git"
 
+src_prepare() {
+	epatch "${FILESDIR}/libdir2.patch"
+}
