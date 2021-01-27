@@ -1,7 +1,7 @@
 # Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=7
 
 inherit autotools qmake-utils
 
@@ -48,7 +48,7 @@ src_prepare() {
 }
 
 src_configure() {
-	 # --disable-examples prevents COMPILING the examples.
+	# --disable-examples prevents COMPILING the examples.
 	econf \
 		--disable-examples \
 		$(use_enable doc doc-dot) \
